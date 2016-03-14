@@ -14,7 +14,7 @@ Orton::Orton()
 	RKOend = false;
 	movingRight = false;
 	moveDirection = 0;
-	animInterval = 6;
+	animInterval = 3;
 	animationCounter = 0;
 	RKOCounter = 0;
 	RKOduration = 25;
@@ -29,6 +29,10 @@ Orton::Orton()
 	leftActive = true;
 	rightActive = true;
 	keyItemGot = false;
+	maxCharge = 100;
+	currentCharge = 0;
+	chargeRate = 1;
+	chargeMultiplier = 3;
 }
 
 sf::Sprite* Orton::getSprite()
@@ -42,7 +46,7 @@ sf::Vector2f Orton::getPosition()
 }
 
 //Move on WASD movement if not hitting a wall or is attacking
-void Orton::move(int direct)
+void Orton::move(int direct, sf::View* gameView)
 {
 	if (!RKO)
 	{
@@ -52,51 +56,79 @@ void Orton::move(int direct)
 		if (direct == 0 && upActive)
 		{
 			ortonSprite.move(0, -1 * moveSpeed);
+			gameView->move(0, -1 * moveSpeed);
 		}
 		else if (direct == 1 && rightActive)
 		{
 			ortonSprite.move(moveSpeed, 0);
+			gameView->move(moveSpeed, 0);
 			movingRight = true;
 		}
 		else if (direct == 2 && downActive)
 		{
 			ortonSprite.move(0, moveSpeed);
+			gameView->move(0, moveSpeed);
 		}
 		else if (direct == 3 && leftActive)
 		{
 			ortonSprite.move(-1 * moveSpeed, 0);
+			gameView->move(-1 * moveSpeed, 0);
 			movingRight = false;
 		}
 		else if (direct == 4)
 		{
 			if (leftActive)
+			{
 				ortonSprite.move(moveSpeed, 0);
+				gameView->move(moveSpeed, 0);
+			}
 			if (upActive)
+			{
 				ortonSprite.move(0, -1 * moveSpeed);
+				gameView->move(0, -1 * moveSpeed);
+			}
 			movingRight = true;
 		}
 		else if (direct == 5)
 		{
 			if (leftActive)
+			{
 				ortonSprite.move(moveSpeed, 0);
+				gameView->move(moveSpeed, 0);
+			}
 			if (downActive)
+			{
 				ortonSprite.move(0, moveSpeed);
+				gameView->move(0, moveSpeed);
+			}
 			movingRight = true;
 		}
 		else if (direct == 6)
 		{
 			if (rightActive)
+			{
 				ortonSprite.move(-1 * moveSpeed, 0);
+				gameView->move(-1 * moveSpeed, 0);
+			}
 			if (downActive)
+			{
 				ortonSprite.move(0, moveSpeed);
+				gameView->move(0, moveSpeed);
+			}
 			movingRight = false;
 		}
 		else if (direct == 7)
 		{
 			if (rightActive)
+			{
 				ortonSprite.move(-1 * moveSpeed, 0);
+				gameView->move(-1 * moveSpeed, 0);
+			}
 			if (upActive)
+			{
 				ortonSprite.move(0, -1 * moveSpeed);
+				gameView->move(0, -1 * moveSpeed);
+			}
 			movingRight = false;
 		}
 
@@ -147,7 +179,7 @@ void Orton::tryRKO()
 }
 
 //Advance the attack animation and jumping through cement walls and destroying wooden walls
-void Orton::advanceRKO(Wall* walls[], int numOfWalls)
+void Orton::advanceRKO(Wall* walls[], int numOfWalls, sf::View* gameView)
 {
 	bool wallFound = false;
 
@@ -170,7 +202,16 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 
 			if (!wallFound)
 			{
-				ortonSprite.move(0, -1 * RKOSpeed);
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(0, -1 * RKOSpeed * chargeMultiplier);
+					gameView->move(0, -1 * RKOSpeed * chargeMultiplier);
+				}
+				else
+				{
+					ortonSprite.move(0, -1 * RKOSpeed);
+					gameView->move(0, -1 * RKOSpeed);
+				}
 			}
 		}
 		else if (moveDirection == 1)
@@ -188,7 +229,19 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 				}
 			}
 			if (!wallFound)
-				ortonSprite.move(RKOSpeed, 0);
+			{
+				
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(chargeMultiplier * RKOSpeed, 0);
+					gameView->move(chargeMultiplier* RKOSpeed, 0);
+				}
+				else
+				{
+					ortonSprite.move(RKOSpeed, 0);
+					gameView->move(RKOSpeed, 0);
+				}
+			}
 		}
 		else if (moveDirection == 2)
 		{
@@ -205,7 +258,19 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 				}
 			}
 			if (!wallFound)
-				ortonSprite.move(0, RKOSpeed);
+			{
+				
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(0, RKOSpeed * chargeMultiplier);
+					gameView->move(0, RKOSpeed * chargeMultiplier);
+				}
+				else
+				{
+					ortonSprite.move(0, RKOSpeed);
+					gameView->move(0, RKOSpeed);
+				}
+			}
 		}
 		else if (moveDirection == 3)
 		{
@@ -222,7 +287,19 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 				}
 			}
 			if (!wallFound)
-				ortonSprite.move(-1 * RKOSpeed, 0);
+			{
+				
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(-1 * RKOSpeed * chargeMultiplier, 0);
+					gameView->move(-1 * RKOSpeed * chargeMultiplier, 0);
+				}
+				else
+				{
+					ortonSprite.move(-1 * RKOSpeed, 0);
+					gameView->move(-1 * RKOSpeed, 0);
+				}
+			}
 		}
 		else if (moveDirection == 4)
 		{
@@ -239,7 +316,19 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 				}
 			}
 			if (!wallFound)
-				ortonSprite.move(RKOSpeed / 2, -1 * (RKOSpeed / 2));
+			{
+				
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(chargeMultiplier * RKOSpeed / 2, -1 * (chargeMultiplier * RKOSpeed / 2));
+					gameView->move(chargeMultiplier * RKOSpeed / 2, -1 * (chargeMultiplier * RKOSpeed / 2));
+				}
+				else
+				{
+					ortonSprite.move(RKOSpeed / 2, -1 * (RKOSpeed / 2));
+					gameView->move(RKOSpeed / 2, -1 * (RKOSpeed / 2));
+				}
+			}
 		}
 		else if (moveDirection == 5)
 		{
@@ -256,7 +345,19 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 				}
 			}
 			if (!wallFound)
-				ortonSprite.move(RKOSpeed / 2, RKOSpeed / 2);
+			{
+				
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(chargeMultiplier * RKOSpeed / 2, chargeMultiplier * RKOSpeed / 2);
+					gameView->move(chargeMultiplier * RKOSpeed / 2, chargeMultiplier * RKOSpeed / 2);
+				}
+				else
+				{
+					ortonSprite.move(RKOSpeed / 2, RKOSpeed / 2);
+					gameView->move(RKOSpeed / 2, RKOSpeed / 2);
+				}
+			}
 		}
 		else if (moveDirection == 6)
 		{
@@ -273,7 +374,19 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 				}
 			}
 			if (!wallFound)
-				ortonSprite.move(-1 * (RKOSpeed / 2), RKOSpeed / 2);
+			{
+				
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(-1 * (chargeMultiplier * RKOSpeed / 2), chargeMultiplier * RKOSpeed / 2);
+					gameView->move(-1 * (chargeMultiplier * RKOSpeed / 2), chargeMultiplier * RKOSpeed / 2);
+				}
+				else
+				{
+					ortonSprite.move(-1 * (RKOSpeed / 2), RKOSpeed / 2);
+					gameView->move(-1 * (RKOSpeed / 2), RKOSpeed / 2);
+				}
+			}
 		}
 		else if (moveDirection == 7)
 		{
@@ -290,17 +403,43 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 				}
 			}
 			if (!wallFound)
-				ortonSprite.move(-1 * (RKOSpeed / 2), -1 * (RKOSpeed / 2));
+			{
+				
+				if (currentCharge >= maxCharge)
+				{
+					ortonSprite.move(-1 * (chargeMultiplier * RKOSpeed / 2), -1 * (chargeMultiplier * RKOSpeed / 2));
+					gameView->move(-1 * (chargeMultiplier * RKOSpeed / 2), -1 * (chargeMultiplier * RKOSpeed / 2));
+				}
+				else
+				{
+					ortonSprite.move(-1 * (RKOSpeed / 2), -1 * (RKOSpeed / 2));
+					gameView->move(-1 * (RKOSpeed / 2), -1 * (RKOSpeed / 2));
+				}
+			}
 		}
 
 		//Move the player for his or her jump
 		if (RKOCounter > (RKOduration / 2))
 		{
-			ortonSprite.move(0, 1);
+			if (currentCharge >= maxCharge)
+			{
+				ortonSprite.move(0, 1 * chargeMultiplier);
+			}
+			else
+			{
+				ortonSprite.move(0, 1);
+			}
 		}
 		else
 		{
-			ortonSprite.move(0, -1);
+			if (currentCharge >= maxCharge)
+			{
+				ortonSprite.move(0, -1 * chargeMultiplier);
+			}
+			else
+			{
+				ortonSprite.move(0, -1);
+			}
 		}
 
 		//Check if the attack is finished
@@ -323,6 +462,11 @@ void Orton::advanceRKO(Wall* walls[], int numOfWalls)
 			RKO = false;
 			onRKOCooldown = false;
 			ortonSprite.setRotation(0);
+
+			if (currentCharge >= maxCharge)
+			{
+				currentCharge = 0;
+			}
 		}
 	}
 }
@@ -408,4 +552,25 @@ void Orton::setKeyItem(bool newState)
 bool Orton::getGotKeyItem()
 {
 	return keyItemGot;
+}
+
+void Orton::setPosition(sf::Vector2f startPos)
+{
+	ortonSprite.setPosition(startPos);
+}
+
+int Orton::getCurrentCharge()
+{
+	return currentCharge;
+}
+int Orton::getMaxCharge()
+{
+	return maxCharge;
+}
+void Orton::chargeSuper()
+{
+	currentCharge += chargeRate;
+
+	if (currentCharge > maxCharge)
+		currentCharge = maxCharge;
 }

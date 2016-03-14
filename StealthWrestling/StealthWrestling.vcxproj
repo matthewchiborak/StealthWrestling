@@ -152,6 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cutscene.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Guard.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cutscene.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Guard.h" />
     <ClInclude Include="Level.h" />

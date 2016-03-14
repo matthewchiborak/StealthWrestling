@@ -12,12 +12,13 @@ Wall::Wall(int length, int height, int xpos, int ypos, bool breakable, sf::Textu
 		wallSprite.setTexture(*wallTexture);
 	}
 
-	wallSprite.setTextureRect(sf::IntRect(0, 0, length, height));
-	wallSprite.setPosition(xpos, ypos);
-	wallSprite.setOrigin(length / 2, height / 2);
+	wallSprite.setTextureRect(sf::IntRect(0, 0, 50 * length, 50 * height));
+	wallSprite.setOrigin(length * 25, height * 25);
+	wallSprite.setPosition((xpos * 50) + (length * 25), (50 * ypos) + (height * 25));
+	
 	active = true;
-	size.x = length;
-	size.y = height;
+	size.x = length * 50;
+	size.y = height * 50;
 }
 
 sf::Sprite* Wall::getSprite()

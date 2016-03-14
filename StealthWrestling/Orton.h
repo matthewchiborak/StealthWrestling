@@ -32,16 +32,21 @@ private:
 	bool leftActive;
 	bool rightActive;
 	bool keyItemGot;
+	int currentCharge;
+	int maxCharge;
+	int chargeRate;
+	int chargeMultiplier;
 
 public:
 	Orton();
 	sf::Sprite* getSprite();
 	sf::Vector2f getPosition();
+	void setPosition(sf::Vector2f startPos);
 	bool getGrabbing();
-	void move(int direct); //up=0 right=1 down=2 left=3 NE=4 SE=5 SW=6 NW=7
+	void move(int direct, sf::View* gameView); //up=0 right=1 down=2 left=3 NE=4 SE=5 SW=6 NW=7
 	sf::FloatRect getBoundBox();
 	void tryRKO();
-	void advanceRKO(Wall* walls[], int numOfWalls);
+	void advanceRKO(Wall* walls[], int numOfWalls, sf::View* gameView);
 	void tryIdle();
 	void setDirection(int direct); //Can use for cardinal direction but really only needs to be used for diagonals
 	int getDirection();
@@ -51,5 +56,8 @@ public:
 	sf::Vector2f getHandPosition();
 	void setKeyItem(bool newState);
 	bool getGotKeyItem();
+	int getCurrentCharge();
+	int getMaxCharge();
+	void chargeSuper();
 };
 #endif
