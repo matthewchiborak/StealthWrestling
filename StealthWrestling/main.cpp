@@ -1,8 +1,11 @@
 #include <SFML/Graphics.hpp>
+//#include <SFML/Audio.hpp>
 #include "Guard.h"
 #include "Orton.h"
 #include "FileManager.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 int main()
 {
@@ -113,6 +116,16 @@ int main()
 	sf::Sprite gameOverSprite;
 	gameOverSprite.setTexture(gameOverTexture);
 
+	//Place to store video
+	//sf::Music itsMeAustinAudio;
+	//itsMeAustinAudio.openFromFile("Resources/Movies/IT'S ME AUSTIN!.wav");
+	Movie itsMeAustinVideo("IT'S ME AUSTIN!", 293);
+	int numberOfFrames = 293;
+	int dialogCounter = 0;
+	sf::Sprite movieSprite;
+	movieSprite.setPosition((windowWidth - 480)/2 , (windowHeight - 360) / 2);
+
+
 	//Keep game going as long as the window is still open
 	while (window.isOpen())
 	{
@@ -131,6 +144,8 @@ int main()
 		
 		if (!myFileManager.advanceCutscene(currentLevel, &cutsceneBackGroundSprite, &dialogText, &leftCutscenePortrait, &rightCutscenePortrait))
 		{
+			dialogCounter = 0;
+
 			//Reset player in case of no input
 			testOrton.tryIdle();
 			testOrton.setActive(8, true);
@@ -338,47 +353,72 @@ int main()
 		}
 		else
 		{
-			//Redraw the window
-			window.clear();
-			window.draw(cutsceneBackGroundSprite);
-			window.draw(leftCutscenePortrait);
-			window.draw(rightCutscenePortrait);
-			window.draw(textBox);
-			window.draw(dialogText);
-			window.display();
-
-			
-			//Ensure one one input for pressing the key
-			while (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+			//Play the movie if it is time
+			//if (currentLevel == 8 && dialogCounter == 6) //TODO set this to the right spot
+			bool isPlaying = false;
+			if (currentLevel == 8 && dialogCounter == 15) 
 			{
-				//Do nothing
-			}
-
-			//Bool to breakloop for event closing
-			bool notCloseWindow = true;
-
-			//Wait for the user to advance the text
-			while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && notCloseWindow)
-			{
-
-				//Do nothing
-				sf::Event event2;
-				while (window.pollEvent(event2))
+				if (!isPlaying)
 				{
-					if (event2.type == sf::Event::Closed)
-					{
-						window.close();
-						notCloseWindow = false;
-					}
+					isPlaying = true;
+					//itsMeAustinAudio.play();
+				}
 
-					//Prevent resizing the window
-					if (event2.type == sf::Event::Resized)
+				dialogCounter++;
+				while (itsMeAustinVideo.setNextFrame(&movieSprite))
+				{
+					window.clear();
+					window.draw(movieSprite);
+					window.display();
+					
+					std::this_thread::sleep_for(std::chrono::milliseconds(25));
+				}
+			}
+			else
+			{
+				dialogCounter++;
+
+				//Redraw the window
+				window.clear();
+				window.draw(cutsceneBackGroundSprite);
+				window.draw(leftCutscenePortrait);
+				window.draw(rightCutscenePortrait);
+				window.draw(textBox);
+				window.draw(dialogText);
+				window.display();
+
+
+				//Ensure one one input for pressing the key
+				while (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+				{
+					//Do nothing
+				}
+
+				//Bool to breakloop for event closing
+				bool notCloseWindow = true;
+
+				//Wait for the user to advance the text
+				while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && notCloseWindow)
+				{
+
+					//Do nothing
+					sf::Event event2;
+					while (window.pollEvent(event2))
 					{
-						window.setSize(sf::Vector2u(windowWidth, windowHeight));
+						if (event2.type == sf::Event::Closed)
+						{
+							window.close();
+							notCloseWindow = false;
+						}
+
+						//Prevent resizing the window
+						if (event2.type == sf::Event::Resized)
+						{
+							window.setSize(sf::Vector2u(windowWidth, windowHeight));
+						}
 					}
 				}
 			}
-
 			
 		}
 	}

@@ -121,6 +121,9 @@ void FileManager::getLevelInfo(int levelNo, int* numOfGuards, Guard* guardHolder
 bool FileManager::readCutsceneFile(int numberOfScenes)
 {
 	std::string line;
+	std::string videoFileName;
+	int numberOfFrames;
+	int instructionToPlay;
 
 	for (int j = 0; j < numberOfScenes; j++)
 	{
@@ -195,6 +198,7 @@ bool FileManager::readCutsceneFile(int numberOfScenes)
 								part++;
 							}
 						}
+						
 
 						
 						temp = "";

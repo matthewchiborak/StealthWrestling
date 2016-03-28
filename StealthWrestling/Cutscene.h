@@ -2,9 +2,11 @@
 #define CUTSCENE_H
 
 #include <SFML/Graphics.hpp>
+//#include <SFML/Audio.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Movie.h"
 
 class Cutscene
 {
@@ -18,6 +20,9 @@ private:
 	sf::Vector3f instructions[40];
 	std::string dialog[40];
 	int currentInstruction;
+	Movie* video;
+	int videoInstruction;
+
 
 public:
 
@@ -26,6 +31,7 @@ public:
 	bool addPortrait(std::string infoString);
 	void addInstruction(int backNum, int leftNum, int rightNum);
 	void addDialog(std::string infoString);
+	void addVideoInfo(std::string videoFileName, int numberOfFrames, int instructionToPlay);
 	int getNumberOfInstructions();
 	int getNumberOfBackGrounds();
 	int getNumberOfDialogs();

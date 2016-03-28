@@ -7,6 +7,8 @@ Cutscene::Cutscene()
 	numberOfDialogs = 0;
 	numberOfPortraits = 0;
 	currentInstruction = 0;
+	video = nullptr;
+	videoInstruction = -1;
 }
 
 bool Cutscene::addBackground(std::string infoString)
@@ -75,8 +77,15 @@ bool Cutscene::advanceCutscene(sf::Sprite* gameBackground, sf::Text* gameDialog,
 
 	gameDialog->setString(dialog[currentInstruction]);
 
+
 	currentInstruction++;
 	return true;
+}
+
+void Cutscene::addVideoInfo(std::string videoFileName, int numberOfFrames, int instructionToPlay)
+{
+	video = new Movie(videoFileName, numberOfFrames);
+	videoInstruction = instructionToPlay;
 }
 
 int Cutscene::getNumberOfInstructions()
