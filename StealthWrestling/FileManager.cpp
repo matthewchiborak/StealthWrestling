@@ -10,6 +10,8 @@ FileManager::FileManager()
 
 	guardTexture3.loadFromFile("Resources/guardDown.png");
 
+	guardTexture4.loadFromFile("Resources/guardCena.png");
+
 	wallTextureStrong.loadFromFile("Resources/TinyCement.png");
 	wallTextureStrong.setRepeated(true);
 
@@ -109,7 +111,7 @@ void FileManager::getLevelInfo(int levelNo, int* numOfGuards, Guard* guardHolder
 
 	for (int i = 0; i < *numOfGuards; i++)
 	{
-		guardHolder[i] = gameLevels[levelNo].createGuard(i, &guardTexture, &guardTexture2, &guardTexture3);
+		guardHolder[i] = gameLevels[levelNo].createGuard(i, &guardTexture, &guardTexture2, &guardTexture3, &guardTexture4);
 	}
 	for (int i = 0; i < *numOfWalls; i++)
 	{

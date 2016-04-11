@@ -13,6 +13,7 @@ private:
 	sf::Texture* guardTextureSide;
 	sf::Texture* guardTextureUp;
 	sf::Texture* guardTextureDown;
+	sf::Texture* guardTextureCena;
 	char direction; //u=up r=right d=down l=left (Clockwise)
 	sf::Sprite guardSprite;
 	bool active;
@@ -28,7 +29,7 @@ private:
 
 public:
 	Guard(sf::Vector2f position, char direction, sf::Texture guardTexture);
-	Guard(std::string guardInfo, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown);
+	Guard(std::string guardInfo, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown, sf::Texture* guardCena);
 	sf::Sprite* getSprite();
 	char getDirection();
 	sf::Vector2f getPosition();

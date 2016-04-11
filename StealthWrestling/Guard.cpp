@@ -23,7 +23,7 @@ Guard::Guard(sf::Vector2f position, char direction, sf::Texture guardTexture)
 }
 
 //Actual constructor. Creates a guard from the passed info. Adds a comma so last value not ignored
-Guard::Guard(std::string guardInfo, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown)
+Guard::Guard(std::string guardInfo, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown, sf::Texture* guardTextureCena)
 {
 	int xpos = 0;
 	int ypos = 0;
@@ -32,6 +32,8 @@ Guard::Guard(std::string guardInfo, sf::Texture* guardTextureSide, sf::Texture* 
 	std::string temp = "";
 	char i;
 	int part = 0;
+
+	//bool isCena = false;
 
 	while (ss >> i)
 	{
@@ -53,7 +55,9 @@ Guard::Guard(std::string guardInfo, sf::Texture* guardTextureSide, sf::Texture* 
 			}
 			else
 			{
+				
 				direction = temp.at(0);
+				
 			}
 
 			temp = "";
@@ -83,9 +87,20 @@ Guard::Guard(std::string guardInfo, sf::Texture* guardTextureSide, sf::Texture* 
 		guardSprite.setTexture(*guardTextureDown);
 	}
 
-	this->guardTextureSide = guardTextureSide;
-	this->guardTextureUp = guardTextureUp;
-	this->guardTextureDown = guardTextureDown;
+	if (direction == 'c')
+	{
+		guardSprite.setTexture(*guardTextureCena);
+		direction = 'd';
+		this->guardTextureSide = guardTextureCena;
+		this->guardTextureUp = guardTextureCena;
+		this->guardTextureDown = guardTextureCena;
+	}
+	else
+	{
+		this->guardTextureSide = guardTextureSide;
+		this->guardTextureUp = guardTextureUp;
+		this->guardTextureDown = guardTextureDown;
+	}
 
 	KORotation = 0;
 	maxKORotation = 450;

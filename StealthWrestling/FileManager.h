@@ -14,11 +14,12 @@ class FileManager
 {
 private:
 	int numberOfLevels;
-	Level gameLevels[10];
-	Cutscene gameCutscenes[10];
+	Level gameLevels[13];
+	Cutscene gameCutscenes[13];
 	sf::Texture guardTexture;
 	sf::Texture guardTexture2;
 	sf::Texture guardTexture3;
+	sf::Texture guardTexture4;
 	sf::Texture wallTextureStrong;
 	sf::Texture wallTextureWeak;
 public:

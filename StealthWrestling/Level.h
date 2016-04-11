@@ -29,7 +29,7 @@ public:
 	void addWall(std::string wallString);
 	int getNumberOfGuards();
 	int getNumberOfWalls();
-	Guard* createGuard(int index, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown);
+	Guard* createGuard(int index, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown, sf::Texture* guardTextureCena);
 	Wall* createWall(int index, sf::Texture* wallTexture, sf::Texture* wallTextureWeak);
 	void setStartPositions(std::string infoString);
 	sf::Texture*  getKeyItemTexture();

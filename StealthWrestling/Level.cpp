@@ -28,9 +28,9 @@ int Level::getNumberOfWalls()
 	return numberOfWalls;
 }
 
-Guard* Level::createGuard(int index, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown)
+Guard* Level::createGuard(int index, sf::Texture* guardTextureSide, sf::Texture* guardTextureUp, sf::Texture* guardTextureDown, sf::Texture* guardTextureCena)
 {
-	return new Guard(guards[index], guardTextureSide, guardTextureUp, guardTextureDown);
+	return new Guard(guards[index], guardTextureSide, guardTextureUp, guardTextureDown, guardTextureCena);
 }
 
 Wall* Level::createWall(int index, sf::Texture* wallTexture, sf::Texture* wallTextureWeak)

@@ -15,10 +15,10 @@ private:
 	int numberOfBackGrounds;
 	int numberOfDialogs;
 	int numberOfPortraits;
-	sf::Texture backgrounds[10];
-	sf::Texture portraits[10];
-	sf::Vector3f instructions[40];
-	std::string dialog[40];
+	sf::Texture backgrounds[20];
+	sf::Texture portraits[11];
+	sf::Vector3f instructions[65];
+	std::string dialog[65];
 	int currentInstruction;
 	Movie* video;
 	int videoInstruction;

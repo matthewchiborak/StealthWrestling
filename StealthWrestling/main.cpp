@@ -86,7 +86,8 @@ int main()
 
 	//Load the in game text font
 	sf::Font font;
-	if (!font.loadFromFile("Mr Sunshine.ttf"))
+	//if (!font.loadFromFile("OpenSans-Regular.ttf"))
+	if (!font.loadFromFile("ostrich-regular.ttf"))
 	{
 		std::cout << "Font loading error\n";
 	}
