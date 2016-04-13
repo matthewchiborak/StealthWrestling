@@ -69,6 +69,12 @@ int main()
 	//Store the level size
 	sf::Vector2f levelSize;
 
+	//Orotn flying stuff
+	sf::Texture ortonflytext;
+	ortonflytext.loadFromFile("Resources/Backgrounds/ortonfly.png");
+	sf::Sprite ortonfly;
+	ortonfly.setTexture(ortonflytext);
+	ortonfly.setPosition(310, 300);
 
 	//Sprites for the cutscene
 	sf::Sprite cutsceneBackGroundSprite;
@@ -379,17 +385,6 @@ int main()
 			{
 				dialogCounter++;
 
-				//Redraw the window
-				
-				window.clear();
-				window.draw(cutsceneBackGroundSprite);
-				window.draw(leftCutscenePortrait);
-				window.draw(rightCutscenePortrait);
-				window.draw(textBox);
-				window.draw(dialogText);
-				window.display();
-				
-
 				//Monado revealing
 				if (currentLevel == 12 && dialogCounter == 9)
 				{
@@ -403,8 +398,8 @@ int main()
 					monadoBar1.setPosition(0, 0);
 					monadoBar2.setPosition(598, 0);
 
-					//Move the bars
-					for (int barIndex = 0; barIndex < 266; barIndex++)
+					//Move the bars was 266 before
+					for (int barIndex = 0; barIndex < 175; barIndex++)
 					{
 						monadoBar1.setPosition(barPos1--, 0);
 						monadoBar2.setPosition(barPos2++, 0);
@@ -421,6 +416,62 @@ int main()
 						window.display();
 					}
 				}
+
+				//Redraw the window
+				
+				window.clear();
+				window.draw(cutsceneBackGroundSprite);
+				window.draw(leftCutscenePortrait);
+				window.draw(rightCutscenePortrait);
+				window.draw(textBox);
+				window.draw(dialogText);
+				if (currentLevel == 12 && (dialogCounter == 27 || dialogCounter == 28))
+				{
+					window.draw(ortonfly);
+				}
+				window.display();
+				
+				//Take off
+				if (currentLevel == 12 && dialogCounter == 29)
+				{
+					int barPos1 = 310;
+					int barPos2 = 300;
+
+					//Move orton
+					for (int barIndex = 0; barIndex < 85; barIndex++)
+					{
+						ortonfly.setPosition(310 - barIndex, 300 - 5 * barIndex);
+						window.clear();
+						window.draw(cutsceneBackGroundSprite);
+						
+						window.draw(ortonfly);
+						window.display();
+					}
+
+					//int thickness = 0;
+					/*sf::RectangleShape wipe(sf::Vector2f(windowWidth, windowHeight));
+					wipe.setFillColor(sf::Color::Black);*/
+					sf::Texture wipetext;
+					wipetext.loadFromFile("Resources/Backgrounds/curtain.png");
+					sf::Sprite wipe;
+					wipe.setTexture(wipetext);
+
+					//Transition to credits
+					for (int barIndex = 0; barIndex < 342; barIndex++)
+					{
+						if (barIndex * 2 > 683)
+						{
+							wipe.setPosition(0, 0);
+						}
+						else
+						wipe.setPosition(0, -1 * windowHeight + barIndex * 2);
+						window.clear();
+						window.draw(cutsceneBackGroundSprite);
+						window.draw(wipe);
+						window.display();
+					}
+				}
+				
 				//Cut in half
 				if (currentLevel == 12 && dialogCounter == 20)
 				{
@@ -441,16 +492,24 @@ int main()
 					cenafull.setTexture(cenaWhole);
 					cenafull.setPosition(388, 0);
 
+					sf::RectangleShape slash(sf::Vector2f(250, 5));
+					slash.rotate(45);
+					slash.setFillColor(sf::Color::Cyan);
+					slash.setPosition(0, -300);
+
 					//Play out the animation
 					//Full cena. Slash will play out
 					for (int i1 = 0; i1 < 100; i1++)
 					{
+						//slash.setPosition(1024 - 9 * i1, 9 * i1);
+						slash.setPosition(13 * i1, -300 + 13 * i1);
 						window.clear();
 						window.draw(cutsceneBackGroundSprite);
 						window.draw(cenafull);
+						window.draw(slash);
 						window.display();
 					}
-					for (int i2 = 0; i2 < 500; i2++)
+					for (int i2 = 0; i2 < 400; i2++)
 					{
 						cenalayer1.setPosition(388 + i2 * 2, i2 * 2);
 						cenalayer2.setPosition(388 - i2 * 2, 0 - i2 * 2);
