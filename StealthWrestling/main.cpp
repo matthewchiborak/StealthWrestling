@@ -9,7 +9,7 @@
 
 int main()
 {
-	int currentLevel = 0;
+	int currentLevel = 12;
 
 	int windowWidth = 1024;
 	int windowHeight = 683;
@@ -380,6 +380,7 @@ int main()
 				dialogCounter++;
 
 				//Redraw the window
+				
 				window.clear();
 				window.draw(cutsceneBackGroundSprite);
 				window.draw(leftCutscenePortrait);
@@ -387,7 +388,85 @@ int main()
 				window.draw(textBox);
 				window.draw(dialogText);
 				window.display();
+				
 
+				//Monado revealing
+				if (currentLevel == 12 && dialogCounter == 9)
+				{
+					sf::RectangleShape monadoBar1(sf::Vector2f(532, windowHeight));
+					monadoBar1.setFillColor(sf::Color::Black);
+					sf::RectangleShape monadoBar2(sf::Vector2f(426, windowHeight));
+					monadoBar2.setFillColor(sf::Color::Black);
+
+					int barPos1 = 0;
+					int barPos2 = 598;
+					monadoBar1.setPosition(0, 0);
+					monadoBar2.setPosition(598, 0);
+
+					//Move the bars
+					for (int barIndex = 0; barIndex < 266; barIndex++)
+					{
+						monadoBar1.setPosition(barPos1--, 0);
+						monadoBar2.setPosition(barPos2++, 0);
+						barPos1--;
+						barPos2++;
+						window.clear();
+						window.draw(cutsceneBackGroundSprite);
+						window.draw(leftCutscenePortrait);
+						window.draw(rightCutscenePortrait);
+						window.draw(textBox);
+						window.draw(dialogText);
+						window.draw(monadoBar1);
+						window.draw(monadoBar2);
+						window.display();
+					}
+				}
+				//Cut in half
+				if (currentLevel == 12 && dialogCounter == 20)
+				{
+					sf::Texture cenaWhole; 
+					cenaWhole.loadFromFile("Resources/Backgrounds/cenafullnoface.png");
+					sf::Texture cenaTop;
+					cenaTop.loadFromFile("Resources/Backgrounds/cenaupper.png");
+					sf::Texture cenaBottom;
+					cenaBottom.loadFromFile("Resources/Backgrounds/cenalower.png");
+
+					sf::Sprite cenalayer1;
+					cenalayer1.setTexture(cenaTop);
+					cenalayer1.setPosition(388, 0);
+					sf::Sprite cenalayer2;
+					cenalayer2.setTexture(cenaBottom);
+					cenalayer2.setPosition(388, 0);
+					sf::Sprite cenafull;
+					cenafull.setTexture(cenaWhole);
+					cenafull.setPosition(388, 0);
+
+					//Play out the animation
+					//Full cena. Slash will play out
+					for (int i1 = 0; i1 < 100; i1++)
+					{
+						window.clear();
+						window.draw(cutsceneBackGroundSprite);
+						window.draw(cenafull);
+						window.display();
+					}
+					for (int i2 = 0; i2 < 500; i2++)
+					{
+						cenalayer1.setPosition(388 + i2 * 2, i2 * 2);
+						cenalayer2.setPosition(388 - i2 * 2, 0 - i2 * 2);
+
+						window.clear();
+						window.draw(cutsceneBackGroundSprite);
+						window.draw(cenalayer1);
+						window.draw(cenalayer2);
+						window.display();
+					}
+
+					window.clear();
+					window.draw(cutsceneBackGroundSprite);
+					window.draw(textBox);
+					window.display();
+				}
 
 				//Ensure one one input for pressing the key
 				while (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
