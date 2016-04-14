@@ -3,16 +3,20 @@
 #include "Guard.h"
 #include "Orton.h"
 #include "FileManager.h"
+#include "Bullet.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 int main()
 {
-	int currentLevel = 12;
+	int currentLevel = 11;
 
 	int windowWidth = 1024;
 	int windowHeight = 683;
+
+	std::srand(std::time(0));
+	const double PI = 3.14159265;
 
 	FileManager myFileManager;
 	//Load the level info
@@ -50,6 +54,14 @@ int main()
 	superBarBack.setFillColor(sf::Color::Red);
 	sf::RectangleShape superBarFront(sf::Vector2f(200, healthBarHeight));
 	superBarFront.setFillColor(sf::Color::Yellow);
+
+	//Health bar for final boss orton
+	sf::RectangleShape healthBarBack(sf::Vector2f(200, healthBarHeight));
+	healthBarBack.setFillColor(sf::Color::Red);
+	healthBarBack.setPosition(windowWidth - 200, 0);
+	sf::RectangleShape healthBarFront(sf::Vector2f(200, healthBarHeight));
+	healthBarFront.setFillColor(sf::Color::Green);
+	healthBarFront.setPosition(windowWidth - 200, 0);
 
 	//Goal must get to with item
 	sf::Sprite goal;
@@ -116,6 +128,44 @@ int main()
 	sf::Sprite backGroundSprite;
 	backGroundSprite.setTexture(backGroundTexture);
 	backGroundSprite.setTextureRect(sf::IntRect(0, 0, levelSize.x, levelSize.y));
+
+	//Load stuff for the final battle
+	sf::Texture spaceBackGroundTexture;
+	spaceBackGroundTexture.loadFromFile("Resources/Backgrounds/spacearena.jpg");
+	sf::Sprite spaceBackGround;
+	spaceBackGround.setTexture(spaceBackGroundTexture);
+
+	sf::Texture cenaBossTexture;
+	cenaBossTexture.loadFromFile("Resources/cenaboss.png");
+	sf::Sprite cenaBoss;
+	cenaBoss.setTexture(cenaBossTexture);
+
+	int damage = 15;
+	int bulletsOnScreen = 0;
+	int maxBulletsOnScreen = 35;
+	Bullet* bulletHolder[35];
+	float shotInterval = 200;
+	bool shotCooldown = false;
+	auto lastBulletSpawned = std::chrono::high_resolution_clock::now();
+	sf::Texture bulletTexture;
+	bulletTexture.loadFromFile("Resources/bullet.png");
+
+	for (int i = 0; i < maxBulletsOnScreen; i++)
+	{
+		bulletHolder[i] = nullptr;
+	}
+
+	int maxOrtonHealth = 100;
+	int currentOrtonHealth = 100;
+
+	int currentPlace = 0;
+	sf::Vector2f place0(1920, 1080);
+	sf::Vector2f place1(1420, 580);
+	sf::Vector2f place2(2420, 580);
+	sf::Vector2f place3(1420, 1580);
+	sf::Vector2f place4(2420, 1580);
+	sf::Vector2f place5(1920, 1080);
+	cenaBoss.setPosition(place0);
 
 	//Load the game over screen
 	sf::Texture gameOverTexture;
@@ -254,12 +304,6 @@ int main()
 						myFileManager.getLevelInfo(currentLevel, &numberOfGuards, guardHolder, &numberOfWalls, wallHolder, &keyItemSprite, &keyItemHeldSprite, &goal, &testOrton, &gameView, &levelSize);
 						backGroundSprite.setTextureRect(sf::IntRect(0, 0, levelSize.x, levelSize.y));
 
-						//Exhaust the cutscene
-						//while (myFileManager.advanceCutscene(currentLevel, &cutsceneBackGroundSprite, &dialogText, &leftCutscenePortrait, &rightCutscenePortrait))
-						{
-							//Do nothing
-						}
-
 						bool gameOverNotCloseWindow = true;
 
 						window.clear();
@@ -310,53 +354,248 @@ int main()
 				backGroundSprite.setTextureRect(sf::IntRect(0, 0, levelSize.x, levelSize.y));
 			}
 
+			//Check if orton is attacking the final boss
+			if (testOrton.getRKO())
+			{
+				if (testOrton.getBoundBox().intersects(cenaBoss.getGlobalBounds()) && currentLevel == 11)
+				{
+					currentPlace++;
+
+					if (currentPlace == 1)
+					{
+						cenaBoss.setPosition(place1);
+					}
+					else if (currentPlace == 2)
+					{
+						cenaBoss.setPosition(place2);
+					}
+					else if (currentPlace == 3)
+					{
+						cenaBoss.setPosition(place3);
+					}
+					else if (currentPlace == 4)
+					{
+						cenaBoss.setPosition(place4);
+					}
+					else if (currentPlace == 5)
+					{
+						cenaBoss.setPosition(place5);
+					}
+				}
+			}
+
 			//Redraw the window
-			window.clear();
-			window.setView(gameView);
-			window.draw(backGroundSprite);
-
-			for (int i = 0; i < numberOfWalls; i++)
+			if (currentLevel != 11)
 			{
-				if (wallHolder[i]->getActive())
-					window.draw(*(wallHolder[i]->getSprite()));
-			}
+				window.clear();
+				window.setView(gameView);
+				window.draw(backGroundSprite);
 
-			for (int i = 0; i < numberOfGuards; i++)
-			{
-				window.draw(*(guardHolder[i]->getSprite()));
-			}
+				for (int i = 0; i < numberOfWalls; i++)
+				{
+					if (wallHolder[i]->getActive())
+						window.draw(*(wallHolder[i]->getSprite()));
+				}
+
+				for (int i = 0; i < numberOfGuards; i++)
+				{
+					window.draw(*(guardHolder[i]->getSprite()));
+				}
 
 
-			window.draw(goal);
+				window.draw(goal);
 
-			window.draw(*(testOrton.getSprite()));
+				window.draw(*(testOrton.getSprite()));
 
-			//Only draw the key item if the player hasn't got it yet
-			if (!testOrton.getGotKeyItem())
-			{
-				window.draw(keyItemSprite);
-			}
+				//Only draw the key item if the player hasn't got it yet
+				if (!testOrton.getGotKeyItem())
+				{
+					window.draw(keyItemSprite);
+				}
 
-			window.setView(HUDView);
-			window.draw(itemBox);
-			superBarFront.setSize(sf::Vector2f(2 * testOrton.getCurrentCharge(), healthBarHeight));
-			if (testOrton.getCurrentCharge() == testOrton.getMaxCharge())
-			{
-				superBarFront.setFillColor(sf::Color::Blue);
+				window.setView(HUDView);
+				window.draw(itemBox);
+				superBarFront.setSize(sf::Vector2f(2 * testOrton.getCurrentCharge(), healthBarHeight));
+				if (testOrton.getCurrentCharge() == testOrton.getMaxCharge())
+				{
+					superBarFront.setFillColor(sf::Color::Blue);
+				}
+				else
+				{
+					superBarFront.setFillColor(sf::Color::Yellow);
+				}
+				window.draw(superBarBack);
+				window.draw(superBarFront);
+
+				if (testOrton.getGotKeyItem())
+				{
+					window.draw(keyItemHeldSprite);
+				}
+
+				window.display();
 			}
 			else
 			{
-				superBarFront.setFillColor(sf::Color::Yellow);
-			}
-			window.draw(superBarBack);
-			window.draw(superBarFront);
+				testOrton.useVoltron();
 
-			if (testOrton.getGotKeyItem())
-			{
-				window.draw(keyItemHeldSprite);
-			}
+				auto rockTimeNow = std::chrono::high_resolution_clock::now();
+				if (((std::chrono::duration_cast<std::chrono::milliseconds>(rockTimeNow - lastBulletSpawned).count())>shotInterval))
+				{
+					for (int i = 0; i < maxBulletsOnScreen; i++)
+					{
+						if (bulletHolder[i] == nullptr)
+						{
+							bulletHolder[i] = new Bullet(&bulletTexture);
+							//int cornerNumber = rand() % 4;
+							int rockAngle = rand() % 360;
 
-			window.display();
+							/*if (cornerNumber == 0)
+							{
+								rockHolder[i]->getSprite()->setPosition(0, 0);
+								rockAngle += 90;
+							}
+							else if (cornerNumber == 1)
+							{
+								rockHolder[i]->getSprite()->setPosition(windowWidth - 64, 0);
+								rockAngle += 180;
+							}
+							else if (cornerNumber == 2)
+							{
+								rockHolder[i]->getSprite()->setPosition(windowWidth - 64, windowHeight - 64);
+								rockAngle += 270;
+							}
+							else*/
+							{
+								bulletHolder[i]->getSprite()->setPosition(cenaBoss.getPosition().x, cenaBoss.getPosition().y);
+							}
+
+							bulletHolder[i]->setDirection(sin(rockAngle*PI / 180), -1 * cos(rockAngle*PI / 180));
+
+							lastBulletSpawned = std::chrono::high_resolution_clock::now();
+							break;
+						}
+					}
+				}
+
+				window.clear();
+				window.setView(gameView);
+				window.draw(spaceBackGround);
+				window.draw(cenaBoss);
+				window.draw(*(testOrton.getSprite()));
+
+				for (int i = 0; i < maxBulletsOnScreen; i++)
+				{
+					if (bulletHolder[i] != nullptr)
+					{
+						if (bulletHolder[i]->getBoundBox().intersects(testOrton.getBoundBox()))
+						{
+							currentOrtonHealth -= damage;
+							if (currentOrtonHealth < 0)
+							{
+								currentOrtonHealth = 0;
+							}
+							delete bulletHolder[i];
+							bulletHolder[i] = nullptr;
+						}
+						else if (bulletHolder[i]->isOffScreen(2160, 3840))
+						{
+							delete bulletHolder[i];
+							bulletHolder[i] = nullptr;
+						}
+						else
+						{
+							bulletHolder[i]->move();
+							window.draw(*bulletHolder[i]->getSprite());
+						}
+					}
+				}
+
+				window.setView(HUDView);
+
+				superBarFront.setSize(sf::Vector2f(2 * testOrton.getCurrentCharge(), healthBarHeight));
+				if (testOrton.getCurrentCharge() == testOrton.getMaxCharge())
+				{
+					superBarFront.setFillColor(sf::Color::Blue);
+				}
+				else
+				{
+					superBarFront.setFillColor(sf::Color::Yellow);
+				}
+				window.draw(superBarBack);
+				window.draw(superBarFront);
+
+				healthBarFront.setSize(sf::Vector2f(2 * currentOrtonHealth, healthBarHeight));
+				window.draw(healthBarBack);
+				window.draw(healthBarFront);
+				window.display();
+
+				//Boss defeated
+				if (currentPlace >= 6)
+				{
+					for (int spindex = 0; spindex < 360; spindex++)
+					{
+						cenaBoss.rotate(spindex);
+						window.clear();
+						window.setView(gameView);
+						window.draw(spaceBackGround);
+						window.draw(cenaBoss);
+						window.draw(*(testOrton.getSprite()));
+						window.display();
+					}
+					/*testOrton.setKeyItem(false);
+					currentLevel++;
+					myFileManager.getLevelInfo(currentLevel, &numberOfGuards, guardHolder, &numberOfWalls, wallHolder, &keyItemSprite, &keyItemHeldSprite, &goal, &testOrton, &gameView, &levelSize);
+					backGroundSprite.setTextureRect(sf::IntRect(0, 0, levelSize.x, levelSize.y));*/
+					testOrton.setKeyItem(true);
+					goal.setPosition(testOrton.getPosition());
+				}
+
+				//Check for game over
+				if (currentOrtonHealth <= 0)
+				{
+					//Reset level and display gameover screen
+					testOrton.setKeyItem(false);
+					myFileManager.getLevelInfo(currentLevel, &numberOfGuards, guardHolder, &numberOfWalls, wallHolder, &keyItemSprite, &keyItemHeldSprite, &goal, &testOrton, &gameView, &levelSize);
+					backGroundSprite.setTextureRect(sf::IntRect(0, 0, levelSize.x, levelSize.y));
+					currentOrtonHealth = maxOrtonHealth;
+					currentPlace = 0;
+					cenaBoss.setPosition(place0);
+
+					for (int bull = 0; bull < maxBulletsOnScreen; bull++)
+					{
+						if (bulletHolder[bull] != nullptr)
+						{
+							delete bulletHolder[bull];
+							bulletHolder[bull] = nullptr;
+						}
+					}
+
+					bool gameOverNotCloseWindow = true;
+
+					window.clear();
+					window.draw(gameOverSprite);
+					window.display();
+
+					while (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && gameOverNotCloseWindow)
+					{
+						sf::Event event3;
+						while (window.pollEvent(event3))
+						{
+							if (event3.type == sf::Event::Closed)
+							{
+								window.close();
+								gameOverNotCloseWindow = false;
+							}
+
+							//Prevent resizing the window
+							if (event3.type == sf::Event::Resized)
+							{
+								window.setSize(sf::Vector2u(windowWidth, windowHeight));
+							}
+						}
+					}
+				}
+			}
 		}
 		else
 		{

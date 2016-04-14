@@ -223,6 +223,11 @@ bool FileManager::readCutsceneFile(int numberOfScenes)
 }
 bool FileManager::advanceCutscene(int levelNo, sf::Sprite* gameBackground, sf::Text* gameDialog, sf::Sprite* leftPortrait, sf::Sprite* rightPortrait)
 {
+	if (levelNo == 12)
+	{
+		//std::cout << "Test\n";
+	}
+
 	return gameCutscenes[levelNo].advanceCutscene(gameBackground, gameDialog, leftPortrait, rightPortrait);
 }
 

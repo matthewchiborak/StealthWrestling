@@ -8,7 +8,12 @@ Orton::Orton()
 	ortonStandBigTexture.loadFromFile("Resources/ortonStand.png");
 	RKOBigTexture.loadFromFile("Resources/RKO.png");
 
+	voltronRunTexture.loadFromFile("Resources/ortronRun.png");
+	voltronStandTexture.loadFromFile("Resources/ortronStand.png");
+	voltronRKOTexture.loadFromFile("Resources/RKOortron.png");
+
 	ortonSprite.setTexture(ortonStandBigTexture);
+	useRegular = true;
 	runSide = true;
 	RKO = false;
 	RKOend = false;
@@ -51,7 +56,14 @@ void Orton::move(int direct, sf::View* gameView)
 	if (!RKO)
 	{
 		moveDirection = direct;
-		ortonSprite.setTexture(ortonRunBigTexture);
+		if (useRegular)
+		{
+			ortonSprite.setTexture(ortonRunBigTexture);
+		}
+		else
+		{
+			ortonSprite.setTexture(voltronRunTexture);
+		}
 
 		if (direct == 0 && upActive)
 		{
@@ -163,7 +175,14 @@ void Orton::tryRKO()
 	{
 		ortonSprite.setRotation(90);
 		RKO = true;
-		ortonSprite.setTexture(RKOBigTexture);
+		if (useRegular)
+		{
+			ortonSprite.setTexture(RKOBigTexture);
+		}
+		else
+		{
+			ortonSprite.setTexture(voltronRKOTexture);
+		}
 		if (runSide)
 		{
 			ortonSprite.setScale(-1.f, 1.f);
@@ -480,7 +499,14 @@ void Orton::tryIdle()
 {
 	if (!RKO)
 	{
-		ortonSprite.setTexture(ortonStandBigTexture);
+		if (useRegular)
+		{
+			ortonSprite.setTexture(ortonStandBigTexture);
+		}
+		else
+		{
+			ortonSprite.setTexture(voltronStandTexture);
+		}
 	}
 }
 
@@ -573,4 +599,8 @@ void Orton::chargeSuper()
 
 	if (currentCharge > maxCharge)
 		currentCharge = maxCharge;
+}
+void Orton::useVoltron()
+{
+	useRegular = false;
 }

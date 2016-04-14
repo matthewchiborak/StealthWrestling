@@ -12,6 +12,12 @@ private:
 	sf::Texture RKOBigTexture;
 	sf::Sprite ortonSprite;
 
+	sf::Texture voltronRunTexture;
+	sf::Texture voltronStandTexture;
+	sf::Texture voltronRKOTexture;
+
+	bool useRegular;
+
 	bool runSide;
 	bool RKO;
 	bool RKOend;
@@ -59,5 +65,6 @@ public:
 	int getCurrentCharge();
 	int getMaxCharge();
 	void chargeSuper();
+	void useVoltron();
 };
 #endif

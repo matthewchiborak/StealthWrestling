@@ -15,7 +15,7 @@ Movie::Movie(std::string fileName, int numOfFrames)
 		{
 			if (videoFrames[i - 1].loadFromFile(fileName + "00" + std::to_string(i) + ".jpg"))
 			{
-				std::cout << fileName << "00" << std::to_string(i) << ".jpg loaded\n";
+				//std::cout << fileName << "00" << std::to_string(i) << ".jpg loaded\n";
 			}
 			else
 			{
@@ -27,7 +27,7 @@ Movie::Movie(std::string fileName, int numOfFrames)
 		{
 			if (videoFrames[i - 1].loadFromFile(fileName + "0" + std::to_string(i) + ".jpg"))
 			{
-				std::cout << fileName << "0" << std::to_string(i) << ".jpg loaded\n";
+				//std::cout << fileName << "0" << std::to_string(i) << ".jpg loaded\n";
 			}
 			else
 			{
@@ -39,7 +39,7 @@ Movie::Movie(std::string fileName, int numOfFrames)
 		{
 			if (videoFrames[i - 1].loadFromFile(fileName + std::to_string(i) + ".jpg"))
 			{
-				std::cout << fileName << std::to_string(i) << ".jpg loaded\n";
+				//std::cout << fileName << std::to_string(i) << ".jpg loaded\n";
 			}
 			else
 			{

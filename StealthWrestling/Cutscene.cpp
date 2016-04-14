@@ -40,7 +40,7 @@ bool Cutscene::addPortrait(std::string infoString)
 }
 void Cutscene::addInstruction(int backNum, int leftNum, int rightNum)
 {
-	std::cout << "Add instruction called\n";
+	//std::cout << "Add instruction called\n";
 	instructions[numberOfInstructions].x = backNum;
 	instructions[numberOfInstructions].y = leftNum;
 	instructions[numberOfInstructions].z = rightNum;
