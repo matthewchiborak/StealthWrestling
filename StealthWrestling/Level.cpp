@@ -35,59 +35,61 @@ Guard* Level::createGuard(int index, sf::Texture* guardTextureSide, sf::Texture*
 
 Wall* Level::createWall(int index, sf::Texture* wallTexture, sf::Texture* wallTextureWeak)
 {
-	std::cout << numberOfWalls << "\n";
+		std::cout << numberOfWalls << "\n";
 
-	int length = 0;
-	int height = 0;
-	int xpos = 0;
-	int ypos = 0;
-	bool isDestructable = false;
+		int length = 0;
+		int height = 0;
+		int xpos = 0;
+		int ypos = 0;
+		bool isDestructable = false;
 
-	std::stringstream ss(walls[index]);
-	std::string temp = "";
-	char i;
-	int part = 0;
+		std::stringstream ss(walls[index]);
+		std::string temp = "";
+		char i;
+		int part = 0;
 
-	while (ss >> i)
-	{
-		temp += i;
-
-		if (ss.peek() == ',')
+		while (ss >> i)
 		{
-			ss.ignore();
+			temp += i;
 
-			if (part == 0)
+			if (ss.peek() == ',')
 			{
-				length = atoi(temp.c_str());
-				part = 1;
-			}
-			else if (part == 1)
-			{
-				height = atoi(temp.c_str());
-				part = 2;
-			}
-			else if (part == 2)
-			{
-				xpos = atoi(temp.c_str());
-				part = 3;
-			}
-			else if (part == 3)
-			{
-				ypos = atoi(temp.c_str());
-				part = 4;
-			}
-			else
-			{
-				char tempChar = temp.at(0);
-				if (tempChar == 'd')
+				ss.ignore();
+
+				if (part == 0)
 				{
-					isDestructable = true;
+					length = atoi(temp.c_str());
+					part = 1;
 				}
-			}
+				else if (part == 1)
+				{
+					height = atoi(temp.c_str());
+					part = 2;
+				}
+				else if (part == 2)
+				{
+					xpos = atoi(temp.c_str());
+					part = 3;
+				}
+				else if (part == 3)
+				{
+					ypos = atoi(temp.c_str());
+					part = 4;
+				}
+				else
+				{
+					char tempChar = temp.at(0);
+					if (tempChar == 'd')
+					{
+						isDestructable = true;
+					}
+				}
 
-			temp = "";
+				temp = "";
+			}
 		}
-	}
+
+	
 
 	Wall* result = new Wall(length, height, xpos, ypos, isDestructable, wallTexture, wallTextureWeak);
 

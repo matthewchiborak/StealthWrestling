@@ -10,7 +10,7 @@
 
 int main()
 {
-	int currentLevel = 11;
+	int currentLevel = 0;
 
 	int windowWidth = 1024;
 	int windowHeight = 683;
@@ -71,10 +71,10 @@ int main()
 	Orton testOrton;
 
 	//Create arrays to hold the game objects
-	const int maxWalls = 20;
+	const int maxWalls = 30;
 	int numberOfWalls = 0;
 	Wall* wallHolder[maxWalls];
-	const int maxGuards = 10;
+	const int maxGuards = 15;
 	int numberOfGuards = 0;
 	Guard* guardHolder[maxGuards];
 

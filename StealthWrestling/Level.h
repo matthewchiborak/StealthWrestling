@@ -11,8 +11,8 @@
 class Level
 {
 private:
-	std::string guards[10];
-	std::string walls[20];
+	std::string guards[15];
+	std::string walls[30];
 	int numberOfGuards;
 	int numberOfWalls;
 	sf::Texture keyItemTexture;
