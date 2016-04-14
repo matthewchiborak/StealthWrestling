@@ -160,7 +160,7 @@ bool Guard::inLineOfSight(sf::Vector2f ortonPosition, int numOfWalls, Wall* wall
 				for (int i = 0; i < numOfWalls; i++)
 				{
 					//if (walls[i]->getActive() && walls[i]->getPosition().y > ortonPosition.y && walls[i]->getPosition().y < guardSprite.getPosition().y && guardSprite.getPosition().x - 16 < walls[i]->getPosition().x && guardSprite.getPosition().x + 16 > walls[i]->getPosition().x)
-					if (walls[i]->getActive() && walls[i]->getPosition().y > ortonPosition.y && walls[i]->getPosition().y < guardSprite.getPosition().y && (guardSprite.getPosition().x - 16 >(walls[i]->getPosition().x - (walls[i]->getSize().x / 2)) || guardSprite.getPosition().x + 16 < (walls[i]->getPosition().x + (walls[i]->getSize().x / 2))))
+					if (walls[i]->getActive() && walls[i]->getPosition().y > ortonPosition.y && walls[i]->getPosition().y < guardSprite.getPosition().y && (guardSprite.getPosition().x >(walls[i]->getPosition().x - (walls[i]->getSize().x / 2)) && guardSprite.getPosition().x < (walls[i]->getPosition().x + (walls[i]->getSize().x / 2))))
 					{
 						return false;
 					}
@@ -175,7 +175,7 @@ bool Guard::inLineOfSight(sf::Vector2f ortonPosition, int numOfWalls, Wall* wall
 				for (int i = 0; i < numOfWalls; i++)
 				{
 					//if (walls[i]->getActive() && walls[i]->getPosition().y < ortonPosition.y && walls[i]->getPosition().y > guardSprite.getPosition().y && guardSprite.getPosition().x - 16 < walls[i]->getPosition().x && guardSprite.getPosition().x + 16 > walls[i]->getPosition().x)
-					if (walls[i]->getActive() && walls[i]->getPosition().y < ortonPosition.y && walls[i]->getPosition().y > guardSprite.getPosition().y && (guardSprite.getPosition().x - 16 > (walls[i]->getPosition().x - (walls[i]->getSize().x/2)) || guardSprite.getPosition().x + 16 < (walls[i]->getPosition().x + (walls[i]->getSize().x / 2))))
+					if (walls[i]->getActive() && walls[i]->getPosition().y < ortonPosition.y && walls[i]->getPosition().y > guardSprite.getPosition().y && (guardSprite.getPosition().x > (walls[i]->getPosition().x - (walls[i]->getSize().x/2)) && guardSprite.getPosition().x < (walls[i]->getPosition().x + (walls[i]->getSize().x / 2))))
 					{
 						return false;
 					}
@@ -190,7 +190,7 @@ bool Guard::inLineOfSight(sf::Vector2f ortonPosition, int numOfWalls, Wall* wall
 				for (int i = 0; i < numOfWalls; i++)
 				{
 					//if (walls[i]->getActive() && walls[i]->getPosition().x > ortonPosition.x && walls[i]->getPosition().x < guardSprite.getPosition().x && guardSprite.getPosition().y - 16 < walls[i]->getPosition().y && guardSprite.getPosition().y + 16 > walls[i]->getPosition().y)
-					if (walls[i]->getActive() && walls[i]->getPosition().x > ortonPosition.x && walls[i]->getPosition().x < guardSprite.getPosition().x && (guardSprite.getPosition().y - 16 >(walls[i]->getPosition().y - (walls[i]->getSize().y / 2)) || guardSprite.getPosition().y + 16 < (walls[i]->getPosition().y + (walls[i]->getSize().y / 2))))
+					if (walls[i]->getActive() && walls[i]->getPosition().x > ortonPosition.x && walls[i]->getPosition().x < guardSprite.getPosition().x && (guardSprite.getPosition().y >(walls[i]->getPosition().y - (walls[i]->getSize().y / 2)) && guardSprite.getPosition().y < (walls[i]->getPosition().y + (walls[i]->getSize().y / 2))))
 					{
 						return false;
 					}
@@ -205,8 +205,13 @@ bool Guard::inLineOfSight(sf::Vector2f ortonPosition, int numOfWalls, Wall* wall
 				for (int i = 0; i < numOfWalls; i++)
 				{
 					//if (walls[i]->getActive() && walls[i]->getPosition().x < ortonPosition.x && walls[i]->getPosition().x > guardSprite.getPosition().x && guardSprite.getPosition().y - 16 < walls[i]->getPosition().y && guardSprite.getPosition().y + 16 > walls[i]->getPosition().y)
-					if (walls[i]->getActive() && walls[i]->getPosition().x < ortonPosition.x && walls[i]->getPosition().x > guardSprite.getPosition().x && (guardSprite.getPosition().y - 16 >(walls[i]->getPosition().y - (walls[i]->getSize().y / 2)) || guardSprite.getPosition().y + 16 < (walls[i]->getPosition().y + (walls[i]->getSize().y / 2))))
+					//if (walls[i]->getActive() && walls[i]->getPosition().x < ortonPosition.x && walls[i]->getPosition().x > guardSprite.getPosition().x && (guardSprite.getPosition().y - 16 >(walls[i]->getPosition().y - (walls[i]->getSize().y / 2)) || guardSprite.getPosition().y + 16 < (walls[i]->getPosition().y + (walls[i]->getSize().y / 2))))
+					//if (walls[i]->getActive() && walls[i]->getPosition().x < ortonPosition.x && walls[i]->getPosition().x > guardSprite.getPosition().x && ((guardSprite.getPosition().y - 16 >(walls[i]->getPosition().y - (walls[i]->getSize().y / 2)) && guardSprite.getPosition().y + 16 >(walls[i]->getPosition().y - (walls[i]->getSize().y / 2))) || (guardSprite.getPosition().y + 16 < (walls[i]->getPosition().y + (walls[i]->getSize().y / 2)))))
+					//std::cout << numOfWalls << "\n";
+					//std::cout <<"Before: "<< guardSprite.getPosition().y << " " << walls[i]->getPosition().y << " " << (walls[i]->getSize().y / 2) << "\n";
+					if (walls[i]->getActive() && walls[i]->getPosition().x < ortonPosition.x && walls[i]->getPosition().x > guardSprite.getPosition().x && (guardSprite.getPosition().y >(walls[i]->getPosition().y - (walls[i]->getSize().y / 2)) && guardSprite.getPosition().y < (walls[i]->getPosition().y + (walls[i]->getSize().y / 2))))
 					{
+						//std::cout << "After: " << guardSprite.getPosition().y << " " << walls[i]->getPosition().y << " " << (walls[i]->getSize().y / 2) << "\n";
 						return false;
 					}
 				}
